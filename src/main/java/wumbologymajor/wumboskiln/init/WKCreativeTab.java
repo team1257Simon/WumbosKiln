@@ -3,6 +3,8 @@ package wumbologymajor.wumboskiln.init;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
+import net.minecraft.world.item.CreativeModeTab.Output;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -30,7 +32,11 @@ public class WKCreativeTab {
     private static @NotNull CreativeModeTab blocksTab() {
         return CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.wumboskiln"))
-                .displayItems((parameters, output) -> output.accept(KILN))
+                .displayItems(WKCreativeTab::putItem)
                 .build();
+    }
+
+    private static void putItem(ItemDisplayParameters parameters, @NotNull Output output) {
+        output.accept(KILN);
     }
 }

@@ -109,7 +109,6 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
             recipeManagerSupplier = event.getServerResources()::getRecipeManager;
         }
 
-
         @Override
         protected @NotNull DynamicKilnRecipeGenerator prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
             return new DynamicKilnRecipeGenerator(recipeManagerSupplier.get());

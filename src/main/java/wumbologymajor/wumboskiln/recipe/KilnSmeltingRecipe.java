@@ -35,7 +35,7 @@ import static wumbologymajor.wumboskiln.util.DataInject.*;
 
 public class KilnSmeltingRecipe extends AbstractCookingRecipe {
     public static final ResourceKey<RecipePropertySet> KILN_INPUT = ResourceKey.create(RecipePropertySet.TYPE_KEY, modResourceLocation("kiln_input"));
-    private static final Supplier<IngredientExtractor> EXTRACTOR = () -> forSingleInput(KILN_SMELTING.get());
+    private static final Supplier<IngredientExtractor> EXTRACTOR = KilnSmeltingRecipe::deferredExtractor;
     private final RecipeSerializer<KilnSmeltingRecipe> SERIALIZER = KILN_SMELTING_SERIALIZER.get();
     private final RecipeType<KilnSmeltingRecipe> TYPE = KILN_SMELTING.get();
 
@@ -45,6 +45,10 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
 
     public static void injectPropertySet() {
         RECIPE_PROPERTY_SETS = injectEntries(RECIPE_PROPERTY_SETS, Stream.of(Map.entry(KILN_INPUT, EXTRACTOR.get())));
+    }
+
+    private static @NotNull IngredientExtractor deferredExtractor() {
+        return forSingleInput(KILN_SMELTING.get());
     }
 
     @Override
