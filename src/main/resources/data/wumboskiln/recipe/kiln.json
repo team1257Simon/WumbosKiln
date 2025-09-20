@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "F": "minecraft:furnace",
+    "C": "minecraft:cobblestone",
+    "I": "minecraft:copper_ingot"
+  },
+  "pattern": [
+    "III",
+    "IFI",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "wumboskiln:kiln"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "wumboskiln:kiln_smelting",
+  "category": "blocks",
+  "cookingtime": 100,
+  "experience": 0.1,
+  "ingredient": "minecraft:black_terracotta",
+  "result": {
+    "count": 1,
+    "id": "minecraft:black_glazed_terracotta"
+  }
+}
