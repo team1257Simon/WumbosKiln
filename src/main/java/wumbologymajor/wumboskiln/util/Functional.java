@@ -20,5 +20,4 @@ public final class Functional {
     public static <T, U> @NotNull Predicate<T> bind(BiPredicate<? super T, ? super U> pred, U u) {
         return t -> pred.test(t, u);
     }
-
 }

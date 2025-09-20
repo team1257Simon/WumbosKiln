@@ -1,5 +1,6 @@
 package wumbologymajor.wumboskiln.data.recipes;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.*;
@@ -32,7 +33,9 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
     }
 
     private @NotNull Predicate<RecipeHolder<? extends AbstractCookingRecipe>> generationFilter() {
-        return bind(this::recipeExistsIn, concat(concat(extantKilnRecipes(), blastingRecipes()), smokingRecipes()).toList()).negate();
+        return bind(this::recipeExistsIn, concat(concat(kilnRecipes(), blastingRecipes()), smokingRecipes()).toList())
+                .or(bind(this::recipeNamedIn, WKConfig.getRecipeBlacklist()))
+                .negate();
     }
 
     private @NotNull Stream<RecipeHolder<?>> allCurrentRecipes() {
@@ -51,7 +54,7 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
         return recipeManager.recipes.byType(BLASTING).stream();
     }
 
-    private @NotNull Stream<RecipeHolder<KilnSmeltingRecipe>> extantKilnRecipes() {
+    private @NotNull Stream<RecipeHolder<KilnSmeltingRecipe>> kilnRecipes() {
         return recipeManager.recipes.byType(WKRecipes.KILN_SMELTING.get()).stream();
     }
 
@@ -87,6 +90,15 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
 
     private boolean recipeExistsIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<RecipeHolder<? extends AbstractCookingRecipe>> in) {
         return in.stream().anyMatch(bind(this::recipeMatches, recipe));
+    }
+
+    private boolean outputMatches(String name, RecipeHolder<? extends AbstractCookingRecipe> recipe) {
+        String realName = ResourceLocation.parse(name).toString();
+        return recipe.value().result().getItem().toString().equals(realName) || recipe.id().location().toString().equals(realName);
+    }
+
+    private boolean recipeNamedIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<String> names) {
+        return names.stream().anyMatch(bind(this::outputMatches, recipe));
     }
 
     public static class Activator extends FunctionalPreparableReloadListener<DynamicKilnRecipeGenerator> {
