@@ -20,6 +20,7 @@ public class WKBlocks {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = create(BLOCK_ENTITY_TYPE, MODID);
     public static final DeferredBlock<KilnBlock> KILN = BLOCKS.registerBlock("kiln", KilnBlock::new);
     public static final Supplier<BlockEntityType<KilnBlockEntity>> KILN_ENTITY = BLOCK_ENTITIES.register("kiln", WKBlocks::createKilnBlockEntityType);
+
     @Contract(" -> new")
     private static @NotNull BlockEntityType<KilnBlockEntity> createKilnBlockEntityType() {
         return new BlockEntityType<>(KilnBlockEntity::new, false, KILN.get());

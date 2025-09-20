@@ -88,7 +88,7 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
             return this.result;
         }
 
-        private AdvancementHolder buildAdvancement(@NotNull RecipeOutput output, @NotNull ResourceKey<Recipe<?>> key) {
+        private @NotNull AdvancementHolder buildAdvancement(@NotNull RecipeOutput output, @NotNull ResourceKey<Recipe<?>> key) {
             Advancement.Builder advancement = output.advancement()
                     .addCriterion("has_the_recipe", unlocked(key))
                     .rewards(recipe(key))

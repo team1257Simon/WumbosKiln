@@ -28,9 +28,11 @@ public class KilnRecipeProvider extends RecipeProvider {
         public VanillaSmeltingDescriptor(ItemLike input, ItemLike output, RecipeCategory category, String advancement, float exp) {
             this(input, output, category, advancement, exp, 200);
         }
+
         public VanillaSmeltingDescriptor(ItemLike input, ItemLike output, RecipeCategory category, String advancement) {
             this(input, output, category, advancement, 0.1F);
         }
+
         public @NotNull Builder toRecipeBuilder(@NotNull Function<ItemLike, Criterion<?>> haveItemCriterion) {
                 return new Builder().ingredient(Ingredient.of(input()))
                         .result(new ItemStack(output()))
@@ -74,7 +76,6 @@ public class KilnRecipeProvider extends RecipeProvider {
             new VanillaSmeltingDescriptor(PURPLE_TERRACOTTA, PURPLE_GLAZED_TERRACOTTA, DECORATIONS, "has_purple_terracotta"),
             new VanillaSmeltingDescriptor(WHITE_TERRACOTTA, WHITE_GLAZED_TERRACOTTA, DECORATIONS, "has_white_terracotta"),
             new VanillaSmeltingDescriptor(YELLOW_TERRACOTTA, YELLOW_GLAZED_TERRACOTTA, DECORATIONS, "has_yellow_terracotta")
-            
     };
 
     private @NotNull Builder ofVanillaRecipe(@NotNull VanillaSmeltingDescriptor descriptor) {
@@ -104,8 +105,8 @@ public class KilnRecipeProvider extends RecipeProvider {
     public static class Runner extends RecipeProvider.Runner {
         public Runner(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
             super(output, lookupProvider);
-
         }
+
         @Override
         public @NotNull RecipeProvider createRecipeProvider(HolderLookup.@NotNull Provider provider, @NotNull RecipeOutput output) {
             return new KilnRecipeProvider(provider, output);

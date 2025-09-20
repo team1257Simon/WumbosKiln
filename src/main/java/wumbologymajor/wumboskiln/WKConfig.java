@@ -27,22 +27,26 @@ public class WKConfig {
             Recipes to exclude from dynamic generation.\s
             Any recipe whose output is listed here will be ignored when generating kiln smelting recipes.\s
             The namespace can be omitted for vanilla items (e.g. minecraft:charcoal).""";
+    public final ModConfigSpec.BooleanValue generateDynamicResources;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> generationBlacklist;
+
     static {
         Pair<WKConfig, ModConfigSpec> pair = BUILDER.configure(WKConfig::new);
         SPEC = pair.getRight();
         CONFIG = pair.getLeft();
     }
+
     public static @Unmodifiable @NotNull Set<String> getRecipeBlacklist() {
         return dynamicGenerationBlacklist;
     }
+
     @SubscribeEvent
     public static void onLoad(final ModConfigEvent.Loading event) {
         LOGGER.debug("RecipeGen Blacklist Entries: {}", CONFIG.generationBlacklist.get().size());
         dynamicGenerationBlacklist = CONFIG.generationBlacklist.get().stream().collect(toUnmodifiableSet());
     }
-    public final ModConfigSpec.BooleanValue generateDynamicResources;
-    public final ModConfigSpec.ConfigValue<List<? extends String>> generationBlacklist;
-    private WKConfig(ModConfigSpec.@NotNull Builder builder) {
+
+    private WKConfig(@NotNull ModConfigSpec.Builder builder) {
         generateDynamicResources = builder.worldRestart()
                 .comment(GENERATE_DYNAMIC_COMMENT)
                 .define("generate_dynamic", true);
@@ -50,9 +54,8 @@ public class WKConfig {
                 .comment(GENERATION_BLACKLIST_COMMENT)
                 .defineListAllowEmpty("generation_blacklist", List.of("charcoal", "lime_dye", "green_dye", "popped_chorus_fruit"), String::new, this::validLocationString);
     }
+
     private boolean validLocationString(Object o) {
-        if(o instanceof String s) {
-            return s.matches("([a-z0-9_.-]*)(:[a-z0-9_.-/]*)?");
-        } else return false;
+        return o instanceof String s && s.matches("([a-z0-9_.-]*)(:[a-z0-9_.-/]*)?");
     }
 }

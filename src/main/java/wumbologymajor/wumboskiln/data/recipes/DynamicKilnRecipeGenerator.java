@@ -59,7 +59,7 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
     }
 
     @Override
-    public void accept(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+    public void accept(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
         if(WKConfig.CONFIG.generateDynamicResources.get() && !injected) {
             if(generated == null) {
                 generated = smeltingRecipes().filter(generationFilter()).map(supplyChain(this::convert)).toList();
@@ -88,16 +88,16 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
         return a.equals(b) || (a.value().result().getItem().equals(b.value().result().getItem()) && a.value().input().equals(b.value().input()));
     }
 
-    private boolean recipeExistsIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<RecipeHolder<? extends AbstractCookingRecipe>> in) {
+    private boolean recipeExistsIn(@NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<RecipeHolder<? extends AbstractCookingRecipe>> in) {
         return in.stream().anyMatch(bind(this::recipeMatches, recipe));
     }
 
-    private boolean outputMatches(String name, RecipeHolder<? extends AbstractCookingRecipe> recipe) {
+    private boolean outputMatches(@NotNull String name, @NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe) {
         String realName = ResourceLocation.parse(name).toString();
         return recipe.value().result().getItem().toString().equals(realName) || recipe.id().location().toString().equals(realName);
     }
 
-    private boolean recipeNamedIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<String> names) {
+    private boolean recipeNamedIn(@NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<String> names) {
         return names.stream().anyMatch(bind(this::outputMatches, recipe));
     }
 

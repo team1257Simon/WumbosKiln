@@ -13,7 +13,7 @@ import static wumbologymajor.wumboskiln.init.WKBlocks.*;
 import static wumbologymajor.wumboskiln.init.WKRecipes.*;
 
 public class KilnBlockEntity extends AbstractFurnaceBlockEntity {
-    public KilnBlockEntity(BlockPos pos, BlockState blockState) {
+    public KilnBlockEntity(@NotNull BlockPos pos, BlockState blockState) {
         super(KILN_ENTITY.get(), pos, blockState, KILN_SMELTING.get());
     }
 

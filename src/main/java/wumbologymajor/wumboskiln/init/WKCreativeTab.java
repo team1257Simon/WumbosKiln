@@ -16,14 +16,17 @@ import static wumbologymajor.wumboskiln.init.WKItems.*;
 
 public class WKCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, WumbosKiln.MODID);
+
     static {
         CREATIVE_MODE_TABS.register("blocks", WKCreativeTab::blocksTab);
     }
+
     public static void addToTabs(@NotNull BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.insertAfter(new ItemStack(BLAST_FURNACE), new ItemStack(KILN.asItem()), PARENT_AND_SEARCH_TABS);
         }
     }
+
     private static @NotNull CreativeModeTab blocksTab() {
         return CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.wumboskiln"))

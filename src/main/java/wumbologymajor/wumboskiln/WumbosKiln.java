@@ -19,6 +19,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import wumbologymajor.wumboskiln.client.gui.screen.KilnScreen;
@@ -36,7 +37,7 @@ public class WumbosKiln {
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public WumbosKiln(IEventBus modEventBus, ModContainer modContainer) {
+    public WumbosKiln(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         WKRecipes.RECIPE_TYPES.register(modEventBus);
@@ -60,21 +61,18 @@ public class WumbosKiln {
         }
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-
-    }
+    private void commonSetup(final FMLCommonSetupEvent event) {}
 
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-
-    }
+    public void onServerStarting(ServerStartingEvent event) {}
 
     @SubscribeEvent
     public void onAddServerReloadListeners(@NotNull AddServerReloadListenersEvent event) {
         event.addListener(modResourceLocation("dynamic_gen"), new DynamicKilnRecipeGenerator.Activator(event));
     }
 
-    public static ResourceLocation modResourceLocation(String path) {
+    @Contract("_ -> new")
+    public static @NotNull ResourceLocation modResourceLocation(@NotNull String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
@@ -82,9 +80,7 @@ public class WumbosKiln {
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientModEvents {
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event) {
-
-        }
+        public static void onClientSetup(FMLClientSetupEvent event) {}
 
         @SubscribeEvent
         public static void onGatherData(@NotNull GatherDataEvent.Client event) {
