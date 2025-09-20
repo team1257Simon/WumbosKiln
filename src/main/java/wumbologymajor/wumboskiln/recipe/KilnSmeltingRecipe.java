@@ -15,38 +15,46 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import wumbologymajor.wumboskiln.WumbosKiln;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNullElse;
 import static net.minecraft.advancements.AdvancementRequirements.Strategy.*;
 import static net.minecraft.advancements.AdvancementRewards.Builder.recipe;
 import static net.minecraft.advancements.critereon.RecipeUnlockedTrigger.*;
 import static net.minecraft.core.registries.BuiltInRegistries.ITEM;
-import static net.minecraft.resources.ResourceLocation.fromNamespaceAndPath;
 import static net.minecraft.world.item.crafting.CookingBookCategory.*;
+import static net.minecraft.world.item.crafting.RecipeManager.*;
+import static wumbologymajor.wumboskiln.WumbosKiln.*;
 import static wumbologymajor.wumboskiln.init.WKItems.*;
 import static wumbologymajor.wumboskiln.init.WKRecipes.*;
+import static wumbologymajor.wumboskiln.util.DataInject.*;
 
 public class KilnSmeltingRecipe extends AbstractCookingRecipe {
-
-    private final RecipeSerializer<KilnSmeltingRecipe> serializer = KILN_SMELTING_SERIALIZER.get();
-    private final RecipeType<KilnSmeltingRecipe> type = KILN_SMELTING.get();
+    public static final ResourceKey<RecipePropertySet> KILN_INPUT = ResourceKey.create(RecipePropertySet.TYPE_KEY, modResourceLocation("kiln_input"));
+    private static final Supplier<IngredientExtractor> EXTRACTOR = () -> forSingleInput(KILN_SMELTING.get());
+    private final RecipeSerializer<KilnSmeltingRecipe> SERIALIZER = KILN_SMELTING_SERIALIZER.get();
+    private final RecipeType<KilnSmeltingRecipe> TYPE = KILN_SMELTING.get();
 
     public KilnSmeltingRecipe(String group, CookingBookCategory category, Ingredient input, ItemStack result, float experience, int cookingTime) {
         super(group, category, input, result, experience, cookingTime);
     }
 
+    public static void injectPropertySet() {
+        RECIPE_PROPERTY_SETS = injectEntries(RECIPE_PROPERTY_SETS, Stream.of(Map.entry(KILN_INPUT, EXTRACTOR.get())));
+    }
+
     @Override
     public @NotNull RecipeSerializer<KilnSmeltingRecipe> getSerializer() {
-        return serializer;
+        return SERIALIZER;
     }
 
     @Override
     public @NotNull RecipeType<KilnSmeltingRecipe> getType() {
-        return type;
+        return TYPE;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
         return KILN.asItem();
     }
 
-    public static class Builder implements RecipeBuilder {
+    public static class Builder implements RecipeBuilder, Supplier<RecipeHolder<KilnSmeltingRecipe>> {
 
         private RecipeCategory category;
         private CookingBookCategory bookCategory;
@@ -93,6 +101,10 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
             return new KilnSmeltingRecipe(group, bookCategory, ingredient, stackResult, experience, cookingTime);
         }
 
+        private @NotNull ResourceKey<Recipe<?>> createKey() {
+            return ResourceKey.create(Registries.RECIPE, getModifiedResourceLocation(result));
+        }
+
         @Override
         public void save(@NotNull RecipeOutput output, @NotNull ResourceKey<Recipe<?>> key) {
             output.accept(key, buildRecipe(), buildAdvancement(output, key));
@@ -100,12 +112,17 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
 
         @Contract("_ -> new")
         private static @NotNull ResourceLocation getModifiedResourceLocation(@NotNull ItemLike itemLike) {
-            return fromNamespaceAndPath(WumbosKiln.MODID, ITEM.getKey(itemLike.asItem()).withPrefix("kiln_smelting/").getPath());
+            return modResourceLocation(ITEM.getKey(itemLike.asItem()).withPrefix("kiln_smelting/").getPath());
         }
 
         @Override
         public void save(@NotNull RecipeOutput recipeOutput) {
-            this.save(recipeOutput, ResourceKey.create(Registries.RECIPE, getModifiedResourceLocation(result)));
+            this.save(recipeOutput, createKey());
+        }
+
+        @Override
+        public RecipeHolder<KilnSmeltingRecipe> get() {
+            return new RecipeHolder<>(createKey(), buildRecipe());
         }
 
         @Override

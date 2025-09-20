@@ -7,6 +7,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
@@ -50,10 +51,16 @@ public class KilnRecipeProvider extends RecipeProvider {
             new VanillaSmeltingDescriptor(RED_SANDSTONE, SMOOTH_RED_SANDSTONE, BUILDING_BLOCKS, "has_red_sandstone"),
             new VanillaSmeltingDescriptor(QUARTZ_BLOCK, SMOOTH_QUARTZ, BUILDING_BLOCKS, "has_quartz_block"),
             new VanillaSmeltingDescriptor(STONE_BRICKS, CRACKED_STONE_BRICKS, BUILDING_BLOCKS, "has_stone_bricks"),
+            new VanillaSmeltingDescriptor(POLISHED_BLACKSTONE_BRICKS, CRACKED_POLISHED_BLACKSTONE_BRICKS, BUILDING_BLOCKS, "has_polished_blackstone_bricks"),
+            new VanillaSmeltingDescriptor(NETHER_BRICKS, CRACKED_NETHER_BRICKS, BUILDING_BLOCKS, "has_nether_bricks"),
+            new VanillaSmeltingDescriptor(DEEPSLATE_BRICKS, CRACKED_DEEPSLATE_BRICKS, BUILDING_BLOCKS, "has_deepslate_bricks"),
+            new VanillaSmeltingDescriptor(DEEPSLATE_TILES, CRACKED_DEEPSLATE_TILES, BUILDING_BLOCKS, "has_deepslate_tiles"),
             new VanillaSmeltingDescriptor(COBBLED_DEEPSLATE, DEEPSLATE, BUILDING_BLOCKS, "has_cobbled_deepslate"),
             new VanillaSmeltingDescriptor(BASALT, SMOOTH_BASALT, BUILDING_BLOCKS, "has_basalt"),
+            new VanillaSmeltingDescriptor(Items.CLAY_BALL, Items.BRICK, MISC, "has_clay_ball", 0.3F),
             new VanillaSmeltingDescriptor(BLACK_TERRACOTTA, BLACK_GLAZED_TERRACOTTA, DECORATIONS, "has_black_terracotta"),
             new VanillaSmeltingDescriptor(BLUE_TERRACOTTA, BLUE_GLAZED_TERRACOTTA, DECORATIONS, "has_blue_terracotta"),
+            new VanillaSmeltingDescriptor(RED_TERRACOTTA, RED_GLAZED_TERRACOTTA, DECORATIONS, "has_red_terracotta"),
             new VanillaSmeltingDescriptor(BROWN_TERRACOTTA, BROWN_GLAZED_TERRACOTTA, DECORATIONS, "has_brown_terracotta"),
             new VanillaSmeltingDescriptor(CYAN_TERRACOTTA, CYAN_GLAZED_TERRACOTTA, DECORATIONS, "has_cyan_terracotta"),
             new VanillaSmeltingDescriptor(GRAY_TERRACOTTA, GRAY_GLAZED_TERRACOTTA, DECORATIONS, "has_gray_terracotta"),
@@ -87,7 +94,7 @@ public class KilnRecipeProvider extends RecipeProvider {
         new Builder().ingredient(tag(SMELTS_TO_GLASS))
                 .result(new ItemStack(GLASS))
                 .category(BUILDING_BLOCKS)
-                .experience(1.0F)
+                .experience(0.1F)
                 .cookingTime(100)
                 .unlockedBy("has_smelts_to_glass", has(SMELTS_TO_GLASS))
                 .save(output);

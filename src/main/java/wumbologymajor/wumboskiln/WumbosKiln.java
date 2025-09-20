@@ -1,6 +1,7 @@
 package wumbologymajor.wumboskiln;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -10,7 +11,10 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
@@ -18,6 +22,7 @@ import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import wumbologymajor.wumboskiln.client.gui.screen.KilnScreen;
+import wumbologymajor.wumboskiln.data.recipes.DynamicKilnRecipeGenerator;
 import wumbologymajor.wumboskiln.data.recipes.KilnRecipeProvider;
 import wumbologymajor.wumboskiln.init.*;
 
@@ -42,7 +47,6 @@ public class WumbosKiln {
         WKMenus.MENUS.register(modEventBus);
         WKCreativeTab.CREATIVE_MODE_TABS.register(modEventBus);
 
-
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (WumbosKiln) to respond directly to events.
         // Do not add this line if there are no @SubscribeEvent-annotated functions in this class, like onServerStarting() below.
@@ -50,7 +54,10 @@ public class WumbosKiln {
         modEventBus.addListener(WKCreativeTab::addToTabs);
 
         // Register our mod's ModConfigSpec so that FML can create and load the config file for us
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, WKConfig.SPEC);
+        if(FMLEnvironment.dist == Dist.CLIENT) {
+            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+        }
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -63,10 +70,13 @@ public class WumbosKiln {
     }
 
     @SubscribeEvent
-    public void onAddServerReloadListeners(AddServerReloadListenersEvent event) {
-
+    public void onAddServerReloadListeners(@NotNull AddServerReloadListenersEvent event) {
+        event.addListener(modResourceLocation("dynamic_gen"), new DynamicKilnRecipeGenerator.Activator(event));
     }
 
+    public static ResourceLocation modResourceLocation(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MODID, path);
+    }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)

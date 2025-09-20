@@ -3,9 +3,9 @@
   "category": "blocks",
   "cookingtime": 100,
   "experience": 0.1,
-  "ingredient": "#minecraft:smelts_to_glass",
+  "ingredient": "minecraft:deepslate_bricks",
   "result": {
     "count": 1,
-    "id": "minecraft:glass"
+    "id": "minecraft:cracked_deepslate_bricks"
   }
 }
