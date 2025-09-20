@@ -4,7 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
@@ -25,5 +27,10 @@ public class KilnBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     protected @NotNull AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory) {
         return new KilnMenu(containerId, playerInventory, this, dataAccess);
+    }
+
+    @Override
+    protected int getBurnDuration(@NotNull FuelValues fuelValues, @NotNull ItemStack stack) {
+        return super.getBurnDuration(fuelValues, stack) / 2;
     }
 }
