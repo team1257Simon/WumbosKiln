@@ -9,7 +9,6 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 import wumbologymajor.wumboskiln.WumbosKiln;
 
 import static net.minecraft.world.item.CreativeModeTab.TabVisibility.*;
@@ -23,20 +22,20 @@ public class WKCreativeTab {
         CREATIVE_MODE_TABS.register("blocks", WKCreativeTab::blocksTab);
     }
 
-    public static void addToTabs(@NotNull BuildCreativeModeTabContentsEvent event) {
+    public static void addToTabs(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
             event.insertAfter(new ItemStack(BLAST_FURNACE), new ItemStack(KILN.asItem()), PARENT_AND_SEARCH_TABS);
         }
     }
 
-    private static @NotNull CreativeModeTab blocksTab() {
+    private static CreativeModeTab blocksTab() {
         return CreativeModeTab.builder()
                 .title(Component.translatable("itemGroup.wumboskiln"))
                 .displayItems(WKCreativeTab::putItem)
                 .build();
     }
 
-    private static void putItem(ItemDisplayParameters parameters, @NotNull Output output) {
+    private static void putItem(ItemDisplayParameters parameters, Output output) {
         output.accept(KILN);
     }
 }

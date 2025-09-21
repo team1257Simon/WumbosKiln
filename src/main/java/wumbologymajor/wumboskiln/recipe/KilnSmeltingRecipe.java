@@ -13,8 +13,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,6 +33,7 @@ import static wumbologymajor.wumboskiln.init.WKItems.*;
 import static wumbologymajor.wumboskiln.init.WKRecipes.*;
 import static wumbologymajor.wumboskiln.util.DataInject.*;
 
+@NonNullAPI
 public class KilnSmeltingRecipe extends AbstractCookingRecipe {
     public static final ResourceKey<RecipePropertySet> KILN_INPUT = ResourceKey.create(RecipePropertySet.TYPE_KEY, modResourceLocation("kiln_input"));
     private static final Supplier<IngredientExtractor> EXTRACTOR = KilnSmeltingRecipe::deferredExtractor;
@@ -47,22 +48,22 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
         RECIPE_PROPERTY_SETS = injectEntries(RECIPE_PROPERTY_SETS, Stream.of(Map.entry(KILN_INPUT, EXTRACTOR.get())));
     }
 
-    private static @NotNull IngredientExtractor deferredExtractor() {
+    private static IngredientExtractor deferredExtractor() {
         return forSingleInput(KILN_SMELTING.get());
     }
 
     @Override
-    public @NotNull RecipeSerializer<KilnSmeltingRecipe> getSerializer() {
+    public RecipeSerializer<KilnSmeltingRecipe> getSerializer() {
         return SERIALIZER;
     }
 
     @Override
-    public @NotNull RecipeType<KilnSmeltingRecipe> getType() {
+    public RecipeType<KilnSmeltingRecipe> getType() {
         return TYPE;
     }
 
     @Override
-    public @NotNull RecipeBookCategory recipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return switch (this.category()) {
             case BLOCKS -> RecipeBookCategories.FURNACE_BLOCKS;
             case FOOD -> RecipeBookCategories.FURNACE_FOOD;
@@ -71,7 +72,7 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
     }
 
     @Override
-    protected @NotNull Item furnaceIcon() {
+    protected Item furnaceIcon() {
         return KILN.asItem();
     }
 
@@ -88,11 +89,11 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
         private String group = "";
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return this.result;
         }
 
-        private @NotNull AdvancementHolder buildAdvancement(@NotNull RecipeOutput output, @NotNull ResourceKey<Recipe<?>> key) {
+        private AdvancementHolder buildAdvancement(RecipeOutput output, ResourceKey<Recipe<?>> key) {
             Advancement.Builder advancement = output.advancement()
                     .addCriterion("has_the_recipe", unlocked(key))
                     .rewards(recipe(key))
@@ -101,26 +102,26 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
             return advancement.build(key.location().withPrefix("recipes/" + category.getFolderName() + "/"));
         }
 
-        private @NotNull KilnSmeltingRecipe buildRecipe() {
+        private KilnSmeltingRecipe buildRecipe() {
             return new KilnSmeltingRecipe(group, bookCategory, ingredient, stackResult, experience, cookingTime);
         }
 
-        private @NotNull ResourceKey<Recipe<?>> createKey() {
+        private ResourceKey<Recipe<?>> createKey() {
             return ResourceKey.create(Registries.RECIPE, getModifiedResourceLocation(result));
         }
 
         @Override
-        public void save(@NotNull RecipeOutput output, @NotNull ResourceKey<Recipe<?>> key) {
+        public void save(RecipeOutput output, ResourceKey<Recipe<?>> key) {
             output.accept(key, buildRecipe(), buildAdvancement(output, key));
         }
 
         @Contract("_ -> new")
-        private static @NotNull ResourceLocation getModifiedResourceLocation(@NotNull ItemLike itemLike) {
+        private static ResourceLocation getModifiedResourceLocation(ItemLike itemLike) {
             return modResourceLocation(ITEM.getKey(itemLike.asItem()).withPrefix("kiln_smelting/").getPath());
         }
 
         @Override
-        public void save(@NotNull RecipeOutput recipeOutput) {
+        public void save(RecipeOutput recipeOutput) {
             this.save(recipeOutput, createKey());
         }
 
@@ -130,40 +131,40 @@ public class KilnSmeltingRecipe extends AbstractCookingRecipe {
         }
 
         @Override
-        public @NotNull Builder unlockedBy(@NotNull String name, @NotNull Criterion<?> criterion) {
+        public Builder unlockedBy(String name, Criterion<?> criterion) {
             criteria.put(name, criterion);
             return this;
         }
 
         @Override
-        public @NotNull Builder group(@Nullable String group) {
+        public Builder group(@Nullable String group) {
             this.group = requireNonNullElse(group, "");
             return this;
         }
 
-        public @NotNull Builder category(RecipeCategory category) {
+        public Builder category(RecipeCategory category) {
             this.category = category;
             return this;
         }
 
-        public @NotNull Builder result(@NotNull ItemStack stackResult) {
+        public Builder result(ItemStack stackResult) {
             this.stackResult = stackResult;
             this.result = stackResult.getItem();
             this.bookCategory = this.result.asItem() instanceof BlockItem ? BLOCKS : MISC;
             return this;
         }
 
-        public @NotNull Builder ingredient(Ingredient ingredient) {
+        public Builder ingredient(Ingredient ingredient) {
             this.ingredient = ingredient;
             return this;
         }
 
-        public @NotNull Builder experience(float experience) {
+        public Builder experience(float experience) {
             this.experience = experience;
             return this;
         }
 
-        public @NotNull Builder cookingTime(int cookingTime) {
+        public Builder cookingTime(int cookingTime) {
             this.cookingTime = cookingTime;
             return this;
         }

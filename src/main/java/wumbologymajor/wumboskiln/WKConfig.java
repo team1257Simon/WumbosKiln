@@ -5,8 +5,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import wumbologymajor.wumboskiln.util.Predicates;
 
 import java.util.List;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class WKConfig {
         CONFIG = pair.getLeft();
     }
 
-    public static @Unmodifiable @NotNull Set<String> getRecipeBlacklist() {
+    public static @Unmodifiable Set<String> getRecipeBlacklist() {
         return dynamicGenerationBlacklist;
     }
 
@@ -46,16 +46,13 @@ public class WKConfig {
         dynamicGenerationBlacklist = CONFIG.generationBlacklist.get().stream().collect(toUnmodifiableSet());
     }
 
-    private WKConfig(@NotNull ModConfigSpec.Builder builder) {
+    private WKConfig(ModConfigSpec.Builder builder) {
         generateDynamicResources = builder.worldRestart()
                 .comment(GENERATE_DYNAMIC_COMMENT)
                 .define("generate_dynamic", true);
         generationBlacklist = builder.worldRestart()
                 .comment(GENERATION_BLACKLIST_COMMENT)
-                .defineListAllowEmpty("generation_blacklist", List.of("charcoal", "lime_dye", "green_dye", "popped_chorus_fruit"), String::new, this::validLocationString);
+                .defineListAllowEmpty("generation_blacklist", List.of("charcoal", "lime_dye", "green_dye", "popped_chorus_fruit"), String::new, Predicates::validLocationString);
     }
 
-    private boolean validLocationString(Object o) {
-        return o instanceof String s && s.matches("([a-z0-9_.-]*)(:[a-z0-9_.-/]*)?");
-    }
 }

@@ -12,14 +12,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import wumbologymajor.wumboskiln.block.entity.KilnBlockEntity;
 import wumbologymajor.wumboskiln.init.WKBlocks;
+import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
 
 import static net.minecraft.sounds.SoundEvents.*;
 import static net.minecraft.sounds.SoundSource.*;
 
+@NonNullAPI
 public class KilnBlock extends AbstractFurnaceBlock {
 
     public static final MapCodec<KilnBlock> CODEC = simpleCodec(KilnBlock::new);
@@ -29,12 +30,12 @@ public class KilnBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    protected @NotNull MapCodec<KilnBlock> codec() {
+    protected MapCodec<KilnBlock> codec() {
         return CODEC;
     }
 
     @Override
-    protected void openContainer(@NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+    protected void openContainer(Level level, BlockPos pos, Player player) {
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity instanceof KilnBlockEntity kilnBlockEntity) {
             player.openMenu(kilnBlockEntity);
@@ -42,12 +43,12 @@ public class KilnBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new KilnBlockEntity(blockPos, blockState);
     }
 
     @Override
-    public void animateTick(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random) {
+    public void animateTick(BlockState blockState, Level level, BlockPos pos, RandomSource random) {
         if (blockState.getValue(LIT)) {
             double x = (double)pos.getX() + 0.5;
             double y = pos.getY();
@@ -67,7 +68,7 @@ public class KilnBlock extends AbstractFurnaceBlock {
     }
 
     @Override
-    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState blockState, @NotNull BlockEntityType<T> type) {
+    public <T extends BlockEntity> @Nullable BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> type) {
         return createFurnaceTicker(level, type, WKBlocks.KILN_ENTITY.get());
     }
 }

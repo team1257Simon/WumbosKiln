@@ -5,7 +5,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import wumbologymajor.wumboskiln.recipe.KilnSmeltingRecipe;
 
 import java.util.function.Supplier;
@@ -20,7 +19,7 @@ public class WKRecipes {
     public static final Supplier<RecipeSerializer<KilnSmeltingRecipe>> KILN_SMELTING_SERIALIZER = RECIPE_SERIALIZERS.register("kiln_smelting", WKRecipes::createKilnSmeltingSerializer);
 
     @Contract(" -> new")
-    private static @NotNull RecipeSerializer<KilnSmeltingRecipe> createKilnSmeltingSerializer() {
+    private static RecipeSerializer<KilnSmeltingRecipe> createKilnSmeltingSerializer() {
         return new AbstractCookingRecipe.Serializer<>(KilnSmeltingRecipe::new, 100);
     }
 }

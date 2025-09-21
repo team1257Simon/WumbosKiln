@@ -8,29 +8,30 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
+import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
 
 import static wumbologymajor.wumboskiln.init.WKBlocks.*;
 import static wumbologymajor.wumboskiln.init.WKRecipes.*;
 
+@NonNullAPI
 public class KilnBlockEntity extends AbstractFurnaceBlockEntity {
-    public KilnBlockEntity(@NotNull BlockPos pos, BlockState blockState) {
+    public KilnBlockEntity(BlockPos pos, BlockState blockState) {
         super(KILN_ENTITY.get(), pos, blockState, KILN_SMELTING.get());
     }
 
     @Override
-    protected @NotNull Component getDefaultName() {
+    protected Component getDefaultName() {
         return Component.translatable("container.kiln");
     }
 
     @Override
-    protected @NotNull AbstractContainerMenu createMenu(int containerId, @NotNull Inventory playerInventory) {
+    protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
         return new KilnMenu(containerId, playerInventory, this, dataAccess);
     }
 
     @Override
-    protected int getBurnDuration(@NotNull FuelValues fuelValues, @NotNull ItemStack stack) {
+    protected int getBurnDuration(FuelValues fuelValues, ItemStack stack) {
         return super.getBurnDuration(fuelValues, stack) / 2;
     }
 }

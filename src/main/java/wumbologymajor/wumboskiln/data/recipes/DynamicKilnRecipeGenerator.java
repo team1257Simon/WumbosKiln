@@ -1,15 +1,15 @@
 package wumbologymajor.wumboskiln.data.recipes;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.*;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import wumbologymajor.wumboskiln.WKConfig;
 import wumbologymajor.wumboskiln.init.WKRecipes;
 import wumbologymajor.wumboskiln.recipe.KilnSmeltingRecipe;
 import wumbologymajor.wumboskiln.util.FunctionalPreparableReloadListener;
+import wumbologymajor.wumboskiln.util.Predicates;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,41 +25,41 @@ import static wumbologymajor.wumboskiln.util.Functional.*;
 
 public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, ProfilerFiller> {
     private final RecipeManager recipeManager;
-    private List<RecipeHolder<KilnSmeltingRecipe>> generated;
+    private @Nullable List<RecipeHolder<KilnSmeltingRecipe>> generated;
     private boolean injected = false;
 
     public DynamicKilnRecipeGenerator(RecipeManager recipeManager) {
         this.recipeManager = recipeManager;
     }
 
-    private @NotNull Predicate<RecipeHolder<? extends AbstractCookingRecipe>> generationFilter() {
-        return bind(this::recipeExistsIn, concat(concat(kilnRecipes(), blastingRecipes()), smokingRecipes()).toList())
-                .or(bind(this::recipeNamedIn, WKConfig.getRecipeBlacklist()))
+    private Predicate<RecipeHolder<? extends AbstractCookingRecipe>> generationFilter() {
+        return Predicates.bind(this::recipeExistsIn, concat(concat(kilnRecipes(), blastingRecipes()), smokingRecipes()).toList())
+                .or(Predicates.bind(this::recipeNamedIn, WKConfig.getRecipeBlacklist()))
                 .negate();
     }
 
-    private @NotNull Stream<RecipeHolder<?>> allCurrentRecipes() {
+    private Stream<RecipeHolder<?>> allCurrentRecipes() {
         return recipeManager.recipes.values().stream();
     }
 
-    private @NotNull Stream<RecipeHolder<SmeltingRecipe>> smeltingRecipes() {
+    private Stream<RecipeHolder<SmeltingRecipe>> smeltingRecipes() {
         return recipeManager.recipes.byType(SMELTING).stream();
     }
 
-    private @NotNull Stream<RecipeHolder<SmokingRecipe>> smokingRecipes() {
+    private Stream<RecipeHolder<SmokingRecipe>> smokingRecipes() {
         return recipeManager.recipes.byType(SMOKING).stream();
     }
 
-    private @NotNull Stream<RecipeHolder<BlastingRecipe>> blastingRecipes() {
+    private Stream<RecipeHolder<BlastingRecipe>> blastingRecipes() {
         return recipeManager.recipes.byType(BLASTING).stream();
     }
 
-    private @NotNull Stream<RecipeHolder<KilnSmeltingRecipe>> kilnRecipes() {
+    private Stream<RecipeHolder<KilnSmeltingRecipe>> kilnRecipes() {
         return recipeManager.recipes.byType(WKRecipes.KILN_SMELTING.get()).stream();
     }
 
     @Override
-    public void accept(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+    public void accept(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         if(WKConfig.CONFIG.generateDynamicResources.get() && !injected) {
             if(generated == null) {
                 generated = smeltingRecipes().filter(generationFilter()).map(supplyChain(this::convert)).toList();
@@ -70,7 +70,7 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
         }
     }
 
-    private KilnSmeltingRecipe.@NotNull Builder convertCookingRecipe(@NotNull AbstractCookingRecipe recipe) {
+    private KilnSmeltingRecipe.Builder convertCookingRecipe(AbstractCookingRecipe recipe) {
         LOGGER.debug("Generated recipe with output {}", recipe.result().getItem());
         return new KilnSmeltingRecipe.Builder()
                 .ingredient(recipe.input())
@@ -80,37 +80,28 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
                 .cookingTime(recipe.cookingTime() / 2);
     }
 
-    private KilnSmeltingRecipe.@NotNull Builder convert(@NotNull RecipeHolder<? extends AbstractCookingRecipe> holder) {
+    private KilnSmeltingRecipe.Builder convert(RecipeHolder<? extends AbstractCookingRecipe> holder) {
         return convertCookingRecipe(holder.value());
     }
 
-    private boolean recipeMatches(@NotNull RecipeHolder<? extends AbstractCookingRecipe> a, RecipeHolder<? extends AbstractCookingRecipe> b) {
-        return a.equals(b) || (a.value().result().getItem().equals(b.value().result().getItem()) && a.value().input().equals(b.value().input()));
+    private boolean recipeExistsIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, Collection<RecipeHolder<? extends AbstractCookingRecipe>> in) {
+        return in.stream().anyMatch(Predicates.bind(Predicates::recipeMatches, recipe));
     }
 
-    private boolean recipeExistsIn(@NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<RecipeHolder<? extends AbstractCookingRecipe>> in) {
-        return in.stream().anyMatch(bind(this::recipeMatches, recipe));
-    }
-
-    private boolean outputMatches(@NotNull String name, @NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe) {
-        String realName = ResourceLocation.parse(name).toString();
-        return recipe.value().result().getItem().toString().equals(realName) || recipe.id().location().toString().equals(realName);
-    }
-
-    private boolean recipeNamedIn(@NotNull RecipeHolder<? extends AbstractCookingRecipe> recipe, @NotNull Collection<String> names) {
-        return names.stream().anyMatch(bind(this::outputMatches, recipe));
+    private boolean recipeNamedIn(RecipeHolder<? extends AbstractCookingRecipe> recipe, Collection<String> names) {
+        return names.stream().anyMatch(Predicates.bind(Predicates::outputMatches, recipe));
     }
 
     public static class Activator extends FunctionalPreparableReloadListener<DynamicKilnRecipeGenerator> {
 
         private final Supplier<RecipeManager> recipeManagerSupplier;
 
-        public Activator(@NotNull AddServerReloadListenersEvent event) {
+        public Activator(AddServerReloadListenersEvent event) {
             recipeManagerSupplier = event.getServerResources()::getRecipeManager;
         }
 
         @Override
-        protected @NotNull DynamicKilnRecipeGenerator prepare(@NotNull ResourceManager resourceManager, @NotNull ProfilerFiller profilerFiller) {
+        protected DynamicKilnRecipeGenerator prepare(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
             return new DynamicKilnRecipeGenerator(recipeManagerSupplier.get());
         }
     }

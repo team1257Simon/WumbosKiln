@@ -10,12 +10,14 @@ import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
+import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
 
 import java.util.List;
 
 import static net.minecraft.resources.ResourceLocation.*;
 
 @OnlyIn(Dist.CLIENT)
+@NonNullAPI
 public class KilnScreen extends AbstractFurnaceScreen<KilnMenu> {
     private static final ResourceLocation LIT_PROGRESS_SPRITE = withDefaultNamespace("container/furnace/lit_progress");
     private static final ResourceLocation BURN_PROGRESS_SPRITE = withDefaultNamespace("container/furnace/burn_progress");

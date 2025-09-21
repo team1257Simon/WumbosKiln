@@ -3,7 +3,6 @@ package wumbologymajor.wumboskiln.init;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
 
 import java.util.function.Supplier;
@@ -17,7 +16,7 @@ public class WKMenus {
     public static final Supplier<MenuType<KilnMenu>> KILN_MENU = MENUS.register("kiln_menu", WKMenus::createKilnMenuType);
 
     @Contract(value = " -> new", pure = true)
-    private static @NotNull MenuType<KilnMenu> createKilnMenuType() {
+    private static MenuType<KilnMenu> createKilnMenuType() {
         return new MenuType<>(KilnMenu::new, DEFAULT_FLAGS);
     }
 }

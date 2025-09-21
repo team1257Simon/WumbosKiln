@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
@@ -33,7 +32,7 @@ public class KilnRecipeProvider extends RecipeProvider {
             this(input, output, category, advancement, 0.1F);
         }
 
-        public @NotNull Builder toRecipeBuilder(@NotNull Function<ItemLike, Criterion<?>> haveItemCriterion) {
+        public Builder toRecipeBuilder(Function<ItemLike, Criterion<?>> haveItemCriterion) {
                 return new Builder().ingredient(Ingredient.of(input()))
                         .result(new ItemStack(output()))
                         .category(category())
@@ -78,11 +77,11 @@ public class KilnRecipeProvider extends RecipeProvider {
             new VanillaSmeltingDescriptor(YELLOW_TERRACOTTA, YELLOW_GLAZED_TERRACOTTA, DECORATIONS, "has_yellow_terracotta")
     };
 
-    private @NotNull Builder ofVanillaRecipe(@NotNull VanillaSmeltingDescriptor descriptor) {
+    private Builder ofVanillaRecipe(VanillaSmeltingDescriptor descriptor) {
         return descriptor.toRecipeBuilder(this::has);
     }
 
-    private void saveRecipe(@NotNull Builder builder) {
+    private void saveRecipe(Builder builder) {
         builder.save(output);
     }
 
@@ -108,12 +107,12 @@ public class KilnRecipeProvider extends RecipeProvider {
         }
 
         @Override
-        public @NotNull RecipeProvider createRecipeProvider(HolderLookup.@NotNull Provider provider, @NotNull RecipeOutput output) {
+        public RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput output) {
             return new KilnRecipeProvider(provider, output);
         }
 
         @Override
-        public @NotNull String getName() {
+        public String getName() {
             return "Kiln Smelting Recipes";
         }
     }

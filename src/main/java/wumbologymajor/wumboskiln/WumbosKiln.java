@@ -20,7 +20,6 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.AddServerReloadListenersEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import wumbologymajor.wumboskiln.client.gui.screen.KilnScreen;
 import wumbologymajor.wumboskiln.data.recipes.DynamicKilnRecipeGenerator;
@@ -37,7 +36,7 @@ public class WumbosKiln {
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public WumbosKiln(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
+    public WumbosKiln(IEventBus modEventBus, ModContainer modContainer) {
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
         WKRecipes.RECIPE_TYPES.register(modEventBus);
@@ -67,12 +66,12 @@ public class WumbosKiln {
     public void onServerStarting(ServerStartingEvent event) {}
 
     @SubscribeEvent
-    public void onAddServerReloadListeners(@NotNull AddServerReloadListenersEvent event) {
+    public void onAddServerReloadListeners(AddServerReloadListenersEvent event) {
         event.addListener(modResourceLocation("dynamic_gen"), new DynamicKilnRecipeGenerator.Activator(event));
     }
 
     @Contract("_ -> new")
-    public static @NotNull ResourceLocation modResourceLocation(@NotNull String path) {
+    public static ResourceLocation modResourceLocation(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
@@ -83,13 +82,13 @@ public class WumbosKiln {
         public static void onClientSetup(FMLClientSetupEvent event) {}
 
         @SubscribeEvent
-        public static void onGatherData(@NotNull GatherDataEvent.Client event) {
+        public static void onGatherData(GatherDataEvent.Client event) {
             LOGGER.info("Generating vanilla kiln smelting recipes");
             event.createProvider(KilnRecipeProvider.Runner::new);
         }
 
         @SubscribeEvent
-        public static void registerScreens(@NotNull RegisterMenuScreensEvent event) {
+        public static void registerScreens(RegisterMenuScreensEvent event) {
             LOGGER.info("Registered screen");
             event.register(WKMenus.KILN_MENU.get(), KilnScreen::new);
         }
