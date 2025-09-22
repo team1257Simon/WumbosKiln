@@ -1,5 +1,8 @@
 package wumbologymajor.wumboskiln.util;
 
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
 import org.jetbrains.annotations.Contract;
 
 import java.util.function.*;
@@ -57,6 +60,14 @@ public final class Functional {
         @Override
         public U apply(T t) {
             return fn.apply(t).get();
+        }
+    }
+
+    public static abstract class FunctionalPreparableReloadListener<T extends BiConsumer<ResourceManager, ProfilerFiller>>
+            extends SimplePreparableReloadListener<T> {
+        @Override
+        protected void apply(T t, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
+            t.accept(resourceManager, profilerFiller);
         }
     }
 }

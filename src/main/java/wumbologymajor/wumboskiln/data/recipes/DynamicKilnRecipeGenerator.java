@@ -8,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import wumbologymajor.wumboskiln.WKConfig;
 import wumbologymajor.wumboskiln.init.WKRecipes;
 import wumbologymajor.wumboskiln.recipe.KilnSmeltingRecipe;
-import wumbologymajor.wumboskiln.util.FunctionalPreparableReloadListener;
 import wumbologymajor.wumboskiln.util.Predicates;
 
 import java.util.Collection;
