@@ -8,9 +8,9 @@ import java.util.function.*;
 public final class Functional {
     private Functional(){}
 
-    @Contract(pure = true)
-    public static <T, U> Function<T, U> supplyChain(Function<? super T, ? extends Supplier<? extends U>> converter) {
-        return converter.andThen(Supplier::get)::apply;
+    @Contract(pure = true, value = "_->new")
+    public static <T, U> Function<T, U> collapse(Function<? super T, ? extends Supplier<? extends U>> converter) {
+        return new CollapsedSupplier<>(converter);
     }
 
     @Contract(pure = true, value = "_,_->new")
@@ -49,6 +49,14 @@ public final class Functional {
         @Override
         public V apply(T t, U u) {
             return original().apply(u, t);
+        }
+    }
+
+    private record CollapsedSupplier<T, U>(Function<? super T, ? extends Supplier<? extends U>> fn)
+        implements Function<T, U> {
+        @Override
+        public U apply(T t) {
+            return fn.apply(t).get();
         }
     }
 }

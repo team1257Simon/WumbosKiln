@@ -62,7 +62,7 @@ public class DynamicKilnRecipeGenerator implements BiConsumer<ResourceManager, P
     public void accept(ResourceManager resourceManager, ProfilerFiller profilerFiller) {
         if(WKConfig.CONFIG.generateDynamicResources.get() && !injected) {
             if(generated == null) {
-                generated = smeltingRecipes().filter(generationFilter()).map(supplyChain(this::convert)).toList();
+                generated = smeltingRecipes().filter(generationFilter()).map(collapse(this::convert)).toList();
             }
             recipeManager.recipes = RecipeMap.create(concat(allCurrentRecipes(), generated.stream()).toList());
             injected = true;
