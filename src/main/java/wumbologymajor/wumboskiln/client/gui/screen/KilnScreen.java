@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
-import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
+import wumbologymajor.wumboskiln.annotation.NonNullAPI;
 
 import java.util.List;
 

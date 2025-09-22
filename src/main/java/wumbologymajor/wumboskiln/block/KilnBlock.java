@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import wumbologymajor.wumboskiln.block.entity.KilnBlockEntity;
 import wumbologymajor.wumboskiln.init.WKBlocks;
-import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
+import wumbologymajor.wumboskiln.annotation.NonNullAPI;
 
 import static net.minecraft.sounds.SoundEvents.*;
 import static net.minecraft.sounds.SoundSource.*;

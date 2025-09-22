@@ -1,4 +1,4 @@
-package wumbologymajor.wumboskiln.util.annotation;
+package wumbologymajor.wumboskiln.annotation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.meta.TypeQualifierDefault;

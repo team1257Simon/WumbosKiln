@@ -14,7 +14,7 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
+import wumbologymajor.wumboskiln.annotation.NonNullAPI;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

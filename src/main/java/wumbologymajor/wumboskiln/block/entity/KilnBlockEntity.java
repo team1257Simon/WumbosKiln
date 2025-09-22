@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.FuelValues;
 import net.minecraft.world.level.block.state.BlockState;
 import wumbologymajor.wumboskiln.menu.KilnMenu;
-import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
+import wumbologymajor.wumboskiln.annotation.NonNullAPI;
 
 import static wumbologymajor.wumboskiln.init.WKBlocks.*;
 import static wumbologymajor.wumboskiln.init.WKRecipes.*;

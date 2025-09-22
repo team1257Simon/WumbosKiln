@@ -6,7 +6,7 @@ import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.crafting.RecipeType;
 import wumbologymajor.wumboskiln.recipe.KilnSmeltingRecipe;
-import wumbologymajor.wumboskiln.util.annotation.NonNullAPI;
+import wumbologymajor.wumboskiln.annotation.NonNullAPI;
 
 import static net.minecraft.world.inventory.RecipeBookType.*;
 import static wumbologymajor.wumboskiln.init.WKMenus.*;
